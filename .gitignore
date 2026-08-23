@@ -1,0 +1,65 @@
+# ==========================================
+# IDE / Editor
+# ==========================================
+# JetBrains (PyCharm / IntelliJ IDEA) - 项目中已存在 backend/.idea
+**/.idea/
+**/*.iml
+
+# Trae IDE config
+.trae/
+
+# ==========================================
+# OS Generated Files (Windows)
+# ==========================================
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# Python / FastAPI Backend
+# ==========================================
+# Byte-compiled / optimized - 项目中各子目录已出现 __pycache__
+**/__pycache__/
+**/*.pyc
+**/*.pyd
+
+# Virtual environment - 项目中已存在 backend/.venv
+backend/.venv/
+
+# Testing cache - 预留 (FastAPI 项目常见 pytest)
+backend/.pytest_cache/
+
+# ==========================================
+# Vue 3 + Vite Frontend (npm)
+# ==========================================
+# Dependencies - package-lock.json 存在，使用 npm
+frontend/node_modules/
+
+# Build outputs - Vite 构建产物
+frontend/dist/
+
+# Vite cache
+frontend/.vite/
+
+# ==========================================
+# Environment & Secrets
+# ==========================================
+.env
+
+# Keys / Certificates
+*.pem
+*.key
+*.crt
+
+# ==========================================
+# Logs & Data
+# ==========================================
+# Logs
+**/*.log
+logs/
+npm-debug.log*
+
+# Databases (SQLite fallback)
+*.db
+
+# Data directories
+data/
