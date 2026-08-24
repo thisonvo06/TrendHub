@@ -2,7 +2,7 @@ from sqlalchemy.orm import mapped_column,Mapped,DeclarativeBase
 from typing import Optional
 from sqlalchemy import Integer, String, Enum, DateTime, Index
 from datetime import datetime
-from sqlalchemy import ForeignKey, select   
+from sqlalchemy import ForeignKey
 
 
 

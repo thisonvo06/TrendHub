@@ -63,3 +63,8 @@ npm-debug.log*
 
 # Data directories
 data/
+
+# ==========================================
+# Project Files
+# ==========================================
+project_note.md
