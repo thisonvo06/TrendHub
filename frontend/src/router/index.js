@@ -18,6 +18,18 @@ const routes = [
     name: 'NewsDetail',
     component: () => import('../views/NewsDetail.vue'),
     meta: { title: '新闻详情' }
+  },
+  {
+    path: '/my',
+    name: 'My',
+    component: () => import('../views/My.vue'),
+    meta: { title: '我的' }
+  },
+  {
+    path: '/user/info',
+    name: 'UserInfo',
+    component: () => import('../views/UserInfo.vue'),
+    meta: { title: '用户信息' }
   }
 ]
 

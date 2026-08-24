@@ -1,6 +1,7 @@
 from pydantic import BaseModel,Field,ConfigDict
 from typing import Optional
 
+
 class UserRequest(BaseModel):
     username: str 
     password: str 
@@ -40,3 +41,14 @@ class UserResponse(BaseModel):
         from_attributes=True # 允许从ORM对象属性直接取值
     )
 
+
+# 更新用户信息：基础类 + Info类
+class UserUpdateRequest(BaseModel):
+    """
+    更新用户信息请求数据模型
+    """
+    nickname: Optional[str] = None
+    avatar: Optional[str] = None
+    gender: Optional[str] = None
+    bio: Optional[str] = None
+    phone: Optional[str] = None
