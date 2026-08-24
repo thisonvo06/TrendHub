@@ -1,0 +1,21 @@
+# ============================================
+# TrendHub Backend Dependencies
+# Python 3.13
+# ============================================
+
+# Web Framework
+fastapi==0.141.1
+uvicorn==0.52.4
+
+# ORM & Database
+sqlalchemy==2.0.52
+aiomysql==0.3.2
+
+# Security
+bcrypt==5.0.0
+
+# MySQL 8.0+ 认证支持 (aiomysql/pymysql 依赖)
+cryptography>=42.0.0
+
+# Environment Variables
+python-dotenv>=1.0.0
