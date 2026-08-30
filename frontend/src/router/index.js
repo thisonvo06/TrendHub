@@ -30,6 +30,30 @@ const routes = [
     name: 'UserInfo',
     component: () => import('../views/UserInfo.vue'),
     meta: { title: '用户信息' }
+  },
+  {
+    path: '/favorite/list',
+    name: 'FavoriteList',
+    component: () => import('../views/FavoriteList.vue'),
+    meta: { title: '我的收藏', requireAuth: true }
+  },
+  {
+    path: '/history/list',
+    name: 'HistoryList',
+    component: () => import('../views/HistoryList.vue'),
+    meta: { title: '浏览历史', requireAuth: true }
+  },
+  {
+    path: '/message/list',
+    name: 'MessageList',
+    component: () => import('../views/MessageList.vue'),
+    meta: { title: '消息通知', requireAuth: true }
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/Settings.vue'),
+    meta: { title: '设置' }
   }
 ]
 
@@ -38,10 +62,16 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫：设置页面标题
+// 路由守卫：设置页面标题 + 简单鉴权（requireAuth）
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title
+  }
+  const token = localStorage.getItem('token')
+  if (to.meta.requireAuth && !token) {
+    // 未登录：回到我的页，My.vue 会弹登录框
+    next({ path: '/my' })
+    return
   }
   next()
 })

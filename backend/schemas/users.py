@@ -52,3 +52,11 @@ class UserUpdateRequest(BaseModel):
     gender: Optional[str] = None
     bio: Optional[str] = None
     phone: Optional[str] = None
+
+
+class PasswordUpdateRequest(BaseModel):
+    """
+    更新密码请求数据模型
+    """
+    old_password:str = Field(..., description="旧密码")
+    new_password:str = Field(..., min_length=6, max_length=20, description="新密码")

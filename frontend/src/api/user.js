@@ -19,3 +19,8 @@ export const getUserInfo = () => {
 export const updateUser = (data) => {
   return request.put('/api/user/update', data)
 }
+
+// 修改密码（PUT /api/user/password）
+export const changePassword = (data) => {
+  return request.put('/api/user/password', data)
+}

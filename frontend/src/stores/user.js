@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { login, register, getUserInfo, updateUser } from '../api/user'
+import { login, register, getUserInfo, updateUser, changePassword } from '../api/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -42,6 +42,12 @@ export const useUserStore = defineStore('user', {
       // 合并更新，保留未变字段
       this.userInfo = { ...this.userInfo, ...res.data }
       localStorage.setItem('userInfo', JSON.stringify(this.userInfo))
+      return res
+    },
+
+    // 修改密码
+    async changePassword(data) {
+      const res = await changePassword(data)
       return res
     },
 

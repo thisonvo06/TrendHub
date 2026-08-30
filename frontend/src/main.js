@@ -29,7 +29,10 @@ import {
   Toast,
   Icon,
   Popup,
-  Dialog
+  Dialog,
+  Loading,
+  Card,
+  SwipeCell
 } from 'vant'
 
 // 导入Vant样式
@@ -63,6 +66,9 @@ app.use(Toast)
 app.use(Icon)
 app.use(Popup)
 app.use(Dialog)
+app.use(Loading)
+app.use(Card)
+app.use(SwipeCell)
 
 // 使用路由、Pinia
 app.use(pinia)

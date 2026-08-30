@@ -40,6 +40,15 @@
         </van-cell>
       </van-cell-group>
 
+      <!-- 账户操作（修改密码 入口） -->
+      <van-cell-group inset class="info-group">
+        <van-cell
+          title="修改密码"
+          is-link
+          @click="openChangePassword"
+        />
+      </van-cell-group>
+
       <!-- 编辑简介弹窗 -->
       <van-dialog
         v-model:show="showBioDialog"
@@ -72,6 +81,53 @@
         </template>
       </van-dialog>
 
+      <!-- 修改密码弹窗 -->
+      <van-dialog
+        v-model:show="showPwdDialog"
+        title="修改密码"
+        :before-close="onPwdDialogClose"
+      >
+        <div class="pwd-dialog-content">
+          <van-field
+            v-model="pwdForm.oldPassword"
+            type="password"
+            label="旧密码"
+            placeholder="请输入原密码"
+            :rules="[{ required: true, message: '请输入原密码' }]"
+          />
+          <van-field
+            v-model="pwdForm.newPassword"
+            type="password"
+            label="新密码"
+            placeholder="请输入新密码（6-20位）"
+            :rules="[
+              { required: true, message: '请输入新密码' },
+              { pattern: /^.{6,20}$/, message: '密码长度需 6-20 位' }
+            ]"
+          />
+          <van-field
+            v-model="pwdForm.confirmPassword"
+            type="password"
+            label="确认新密码"
+            placeholder="请再次输入新密码"
+            :rules="[{ required: true, message: '请再次输入新密码' }]"
+          />
+        </div>
+        <template #footer>
+          <van-button class="dialog-btn" @click="showPwdDialog = false">
+            取消
+          </van-button>
+          <van-button
+            type="primary"
+            class="dialog-btn"
+            :loading="pwdSaving"
+            @click="confirmChangePassword"
+          >
+            确认
+          </van-button>
+        </template>
+      </van-dialog>
+
       <!-- 调试区（显示接口返回的原始 JSON） -->
       <div class="raw-section">
         <div class="raw-title">接口返回原始数据（GET /api/user/info）</div>
@@ -84,7 +140,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { showToast } from 'vant'
 import { useUserStore } from '../stores/user'
@@ -102,6 +158,64 @@ const userInfo = ref(null)
 const showBioDialog = ref(false)
 const bioDraft = ref('')
 const bioSaving = ref(false)
+
+// 修改密码弹窗状态
+const showPwdDialog = ref(false)
+const pwdSaving = ref(false)
+const pwdForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+function resetPwdForm() {
+  pwdForm.oldPassword = ''
+  pwdForm.newPassword = ''
+  pwdForm.confirmPassword = ''
+}
+
+function openChangePassword() {
+  resetPwdForm()
+  showPwdDialog.value = true
+}
+
+function onPwdDialogClose(action, done) {
+  done()
+}
+
+async function confirmChangePassword() {
+  // 前端基本校验
+  if (!pwdForm.oldPassword) {
+    showToast('请输入原密码')
+    return
+  }
+  if (!pwdForm.newPassword || pwdForm.newPassword.length < 6 || pwdForm.newPassword.length > 20) {
+    showToast('新密码 6-20 位')
+    return
+  }
+  if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+    showToast('两次输入的新密码不一致')
+    return
+  }
+  if (pwdForm.newPassword === pwdForm.oldPassword) {
+    showToast('新密码不能与旧密码相同')
+    return
+  }
+  pwdSaving.value = true
+  try {
+    // 按 API 文档规范使用 camelCase 字段名
+    await userStore.changePassword({
+      oldPassword: pwdForm.oldPassword,
+      newPassword: pwdForm.newPassword
+    })
+    showToast('修改密码成功')
+    showPwdDialog.value = false
+  } catch (e) {
+    // 拦截器已处理通用错误；旧密码不通过也会报错
+  } finally {
+    pwdSaving.value = false
+  }
+}
 
 function openEditBio() {
   bioDraft.value = userInfo.value?.bio || ''
@@ -269,6 +383,11 @@ onMounted(async () => {
   color: #333;
   margin-bottom: 8px;
   font-weight: 500;
+}
+
+/* 修改密码弹窗样式 */
+.pwd-dialog-content {
+  padding: 16px 16px 0;
 }
 
 .dialog-btn {

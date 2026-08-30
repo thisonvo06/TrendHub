@@ -1,54 +1,51 @@
 <template>
-  <div>
+  <div class="categories-page">
     <van-nav-bar title="全部分类" left-arrow @click-left="onClickLeft" />
     <div class="category">
-      <van-grid :column-num="3" :border="false">
+      <van-loading v-if="loading" class="page-loading" />
+      <van-grid v-else :column-num="3" :border="false">
         <van-grid-item
           v-for="item in categories"
           :key="item.id"
           :text="item.name"
+          icon="newspaper-o"
           @click="onSelect(item)"
         />
       </van-grid>
-      <div v-if="loading" class="loading">加载中...</div>
-      <van-empty v-else-if="categories.length === 0" description="暂无分类数据" />
+      <van-empty v-if="!loading && categories.length === 0" description="暂无分类数据" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
-import axios from 'axios'
+import { useNewsStore } from '../stores/news'
 
 const router = useRouter()
-const categories = ref([])
-const loading = ref(true)
+const newsStore = useNewsStore()
+
+const loading = computed(() => newsStore.categories.length === 0)
+
+const categories = computed(() => newsStore.categories)
 
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/news/categories')
-    if (res.data.code === 200) {
-      categories.value = res.data.data
-    } else {
-      showToast(res.data.message || '加载失败')
-    }
+    await newsStore.fetchCategories({ skip: 0, limit: 100 })
   } catch (err) {
-    showToast('网络错误，请检查后端是否启动')
+    showToast('加载失败，请稍后重试')
     console.error(err)
-  } finally {
-    loading.value = false
   }
 })
 
 function onClickLeft() {
-  // 首页无返回，提示即可
+  // 首页无返回
   showToast('已在首页')
 }
 
 function onSelect(item) {
-  // 跳转到新闻列表页
+  newsStore.setCurrentCategory(item.id, item.name)
   router.push({
     name: 'NewsList',
     params: { categoryId: item.id }
@@ -57,12 +54,18 @@ function onSelect(item) {
 </script>
 
 <style scoped>
-.category {
-  padding: 10px;
+.categories-page {
+  min-height: 100vh;
+  background-color: var(--background-color, #f7f8fa);
+  padding-bottom: 60px;
 }
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #969799;
+
+.category {
+  padding: 16px;
+}
+
+.page-loading {
+  display: block;
+  margin: 80px auto 0;
 }
 </style>

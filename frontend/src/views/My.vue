@@ -81,10 +81,10 @@
 
     <!-- 功能菜单 -->
     <van-cell-group inset class="menu-group">
-      <van-cell title="我的收藏" is-link />
-      <van-cell title="浏览历史" is-link />
-      <van-cell title="消息通知" is-link />
-      <van-cell title="设置" is-link />
+      <van-cell title="我的收藏" is-link icon="star-o" @click="router.push('/favorite/list')" />
+      <van-cell title="浏览历史" is-link icon="clock-o" @click="router.push('/history/list')" />
+      <van-cell title="消息通知" is-link icon="bell-o" @click="router.push('/message/list')" />
+      <van-cell title="设置" is-link icon="setting-o" @click="router.push('/settings')" />
     </van-cell-group>
 
     <van-cell-group inset class="menu-group" v-if="userStore.token">
