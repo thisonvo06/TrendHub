@@ -5,6 +5,8 @@ export const useNewsStore = defineStore('news', {
   state: () => ({
     // 分类列表
     categories: [],
+    // 分类加载中：初始为 true，请求结束（成功或失败）后置 false，避免失败时一直转圈
+    categoriesLoading: true,
     // 当前选中分类（news list 页）
     currentCategoryId: null,
     currentCategoryName: '',
@@ -28,9 +30,15 @@ export const useNewsStore = defineStore('news', {
     // 分类
     // =================================================
     async fetchCategories(params = { skip: 0, limit: 100 }) {
-      const res = await getCategories(params)
-      this.categories = res.data || []
-      return res.data
+      this.categoriesLoading = true
+      try {
+        const res = await getCategories(params)
+        this.categories = res.data || []
+        return res.data
+      } finally {
+        // 无论成功还是失败都结束 loading，失败时页面显示"暂无分类数据"而不是无限转圈
+        this.categoriesLoading = false
+      }
     },
 
     setCurrentCategory(id, name = '') {

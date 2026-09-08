@@ -58,5 +58,9 @@ class PasswordUpdateRequest(BaseModel):
     """
     更新密码请求数据模型
     """
-    old_password:str = Field(..., description="旧密码")
-    new_password:str = Field(..., min_length=6, max_length=20, description="新密码")
+    old_password:str = Field(..., alias="oldPassword")
+    new_password:str = Field(..., min_length=6, max_length=20, alias="newPassword")
+
+    model_config = ConfigDict(
+        populate_by_name=True # 同时兼容 oldPassword / old_password 两种写法
+    )

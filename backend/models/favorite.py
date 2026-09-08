@@ -1,11 +1,10 @@
 from datetime import datetime
 from sqlalchemy import UniqueConstraint, Index, Integer, ForeignKey, DateTime
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from models.user import User
-from models.news import News
+from sqlalchemy.orm import Mapped, mapped_column
+from models.users import User
+from models.news import NewsList
+from models.base import Base
 
-class Base(DeclarativeBase):
-    pass
 
 class Favorite(Base):
     """
@@ -15,15 +14,15 @@ class Favorite(Base):
 
     # 创建索引
     __table_args__ = (
-    UniqueConstraint('user_id', 'news_id', name='user_news_unique'),
-    Index('fk_favorite_user_idx', 'user_id'),
-    Index('fk_favorite_news_idx', 'news_id'),
+        UniqueConstraint('user_id', 'news_id', name='user_news_unique'),
+        Index('fk_favorite_user_idx', 'user_id'),
+        Index('fk_favorite_news_idx', 'news_id'),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, comment="收藏ID")
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey(User.id), nullable=False, comment="⽤户ID")
-    news_id: Mapped[int] = mapped_column(Integer, ForeignKey(News.id), nullable=False, comment="新闻ID")
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False, comment="收藏时间")
+    news_id: Mapped[int] = mapped_column(Integer, ForeignKey(NewsList.id), nullable=False, comment="新闻ID")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, nullable=False, comment="收藏时间")
     
     def __repr__(self):
         return f"<Favorite(id={self.id}, user_id={self.user_id}, news_id={self.news_id}, created_at={self.created_at})>"

@@ -26,7 +26,10 @@ import { useNewsStore } from '../stores/news'
 const router = useRouter()
 const newsStore = useNewsStore()
 
-const loading = computed(() => newsStore.categories.length === 0)
+// 仅在没有缓存数据且正在请求时显示 loading，避免返回列表页再进入时闪一下转圈
+const loading = computed(
+  () => newsStore.categoriesLoading && newsStore.categories.length === 0
+)
 
 const categories = computed(() => newsStore.categories)
 

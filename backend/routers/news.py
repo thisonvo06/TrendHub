@@ -35,8 +35,9 @@ async def get_news_list(
     new_list = await news.get_list(db,category_id,page,page_size)
     # 计算总量
     total = await news.get_total(db,category_id)
-    # 计算是否有更多
-    has_more = page*page_size + len(new_list) < total
+    # 计算是否有更多：已加载条数 = page * page_size，未达总数则还有下一页
+    # （原写法 page*page_size + len(new_list) 多算了一页，会导致最后一页加载不出来）
+    has_more = page * page_size < total
     return {
         "code": 200,
         "message": "success",
@@ -48,7 +49,7 @@ async def get_news_list(
     }
 
 @router.get("/detail")
-async def get_news_detail(db:AsyncSession=Depends(get_db),id:int=1):
+async def get_news_detail(db:AsyncSession=Depends(get_db),id:int=Query(1,description="新闻ID")):
     # 获取新闻详情 + 浏览数+1 + 相关新闻
     detail = await news.get_detail(db,id)
     if not detail:

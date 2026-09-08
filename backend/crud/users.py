@@ -79,7 +79,7 @@ async def update_user(user_data: UserUpdateRequest, user: User, db: AsyncSession
     await db.commit()
     # 检查更新是否命中数据库
     if result.rowcount == 0:
-        return HTTPException(status_code=404, detail="用户不存在")
+        raise HTTPException(status_code=404, detail="用户不存在")
     # 获取更新后的用户
     updated_user = await get_user_by_username(db, user.username)
     return updated_user
