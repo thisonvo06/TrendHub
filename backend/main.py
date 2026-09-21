@@ -1,12 +1,14 @@
 from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI
+
+# 第一步：先加载 .env
+load_dotenv(Path(__file__).resolve().parent.parent / ".env") # 加载根目录 .env（必须在导入 routers/config 之前：db_conf 在导入时就读取 database_url）
+
+# 第二步：再导入路由，确保 db_conf.py 读取时环境变量已就绪
 from routers import news,users,favorite,history
 from fastapi.middleware.cors import CORSMiddleware
 from utils.exception_handler import register_exception_handler
-
-# 加载根目录 .env（必须在导入 routers/config 之前：db_conf 在导入时就读取 database_url）
-load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 app = FastAPI()
 

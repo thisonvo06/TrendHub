@@ -2,11 +2,14 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 import os
 
 # 数据库URL
-database_url = os.getenv("database_url")
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL is None:
+    raise ValueError("请检查 .env 文件中是否设置了 DATABASE_URL")
 
 # 创建异步引擎
 async_engine = create_async_engine(
-    database_url,
+    DATABASE_URL,
     echo=True, # 输出sql日志
     pool_size=10, #设置连接池中保持的持久连接数
     max_overflow=10 # 设置连接池允许创建的额外连接数
